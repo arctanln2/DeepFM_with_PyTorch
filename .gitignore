@@ -1,0 +1,4 @@
+data/raw/*.txt
+data/*.txt
+checkpoint/
+*/__pycache__/

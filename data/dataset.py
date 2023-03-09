@@ -25,13 +25,17 @@ class CriteoDataset(Dataset):
         if not self._check_exists():
             raise RuntimeError('Dataset not found.')
 
+
+        # 我找到的sample.txt没有抬头，只有数据，所以这里的header要改成None才行
         if self.train:
-            data = pd.read_csv(os.path.join(root, 'train.txt'))
+            data = pd.read_csv(os.path.join(root, 'train.txt'), header=None)
             self.train_data = data.iloc[:, :-1].values
             self.target = data.iloc[:, -1].values
+            print(self.train_data.shape)
         else:
-            data = pd.read_csv(os.path.join(root, 'test.txt'))
-            self.test_data = data.iloc[:, :-1].values
+            data = pd.read_csv(os.path.join(root, 'test.txt'), header=None)
+            self.test_data = data.iloc[:, :].values # 本来data.iloc[:, :-1].values，去掉-1
+            print(self.test_data.shape)
     
     def __getitem__(self, idx):
         if self.train:
@@ -47,9 +51,9 @@ class CriteoDataset(Dataset):
             Xv = torch.from_numpy(np.concatenate((Xv_coutinous, Xv_categorial)).astype(np.int32))
             return Xi, Xv, targetI
         else:
-            dataI = self.test_data.iloc[idx, :]
+            dataI = self.test_data[idx, :] # 去掉iloc
             # index of continous features are one
-            Xi_coutinous = np.ones_like(dataI[:continous_features])
+            Xi_coutinous = np.zeros_like(dataI[:continous_features]) # zeros_like ones_like?
             Xi_categorial = dataI[continous_features:]
             Xi = torch.from_numpy(np.concatenate((Xi_coutinous, Xi_categorial)).astype(np.int32)).unsqueeze(-1)
             

@@ -107,15 +107,25 @@ class DeepFM(nn.Module):
         """
         deep_emb = torch.cat(fm_second_order_emb_arr, 1)
         deep_out = deep_emb
+        # for i in range(1, len(self.hidden_dims) + 1):
+        #     print(next(getattr(self, 'linear_' + str(i)).parameters()).device)
+        #     # deep_out = getattr(self, 'batchNorm_' + str(i))(deep_out)
+        #     # deep_out = getattr(self, 'dropout_' + str(i))(deep_out)
         for i in range(1, len(self.hidden_dims) + 1):
+            # print(deep_out.shape)
             deep_out = getattr(self, 'linear_' + str(i))(deep_out)
+            # print(deep_out.shape)
             deep_out = getattr(self, 'batchNorm_' + str(i))(deep_out)
+            # print(deep_out.shape)
             deep_out = getattr(self, 'dropout_' + str(i))(deep_out)
+            # print(deep_out.shape)
+            
         """
             sum
         """
         total_sum = torch.sum(fm_first_order, 1) + \
                     torch.sum(fm_second_order, 1) + torch.sum(deep_out, 1) + self.bias
+        # print(total_sum.shape)
         return total_sum
 
     def fit(self, loader_train, loader_val, optimizer, epochs=100, verbose=False, print_every=100):
@@ -167,7 +177,7 @@ class DeepFM(nn.Module):
                 xv = xv.to(device=self.device, dtype=torch.float)
                 y = y.to(device=self.device, dtype=torch.bool)
                 total = model(xi, xv)
-                preds = (F.sigmoid(total) > 0.5)
+                preds = (torch.sigmoid(total) > 0.5)
                 num_correct += (preds == y).sum()
                 num_samples += preds.size(0)
             acc = float(num_correct) / num_samples

@@ -118,8 +118,7 @@ def preprocess(datadir, outdir, num_train_sample = 10000, num_test_sample = 1000
                                             .rstrip('.'))
                 categorial_vals = []
                 for i in range(0, len(categorial_features)):
-                    val = dicts.gen(i, features[categorial_features[
-                        i]])
+                    val = dicts.gen(i, features[categorial_features[i]])
                     categorial_vals.append(str(val))
 
                 continous_vals = ','.join(continous_vals)
@@ -135,13 +134,14 @@ def preprocess(datadir, outdir, num_train_sample = 10000, num_test_sample = 1000
 
                 continous_vals = []
                 for i in range(0, len(continous_features)):
-                    val = dists.gen(i, features[continous_features[i] - 1])
+                    # val = dists.gen(i, features[continous_features[i] - 1])
+                    val = dists.gen(i, features[continous_features[i] ])
                     continous_vals.append("{0:.6f}".format(val).rstrip('0')
                                           .rstrip('.'))
                 categorial_vals = []
                 for i in range(0, len(categorial_features)):
-                    val = dicts.gen(i, features[categorial_features[
-                        i] - 1])
+                    # val = dicts.gen(i, features[categorial_features[i] - 1])
+                    val = dicts.gen(i, features[categorial_features[i]])
                     categorial_vals.append(str(val))
 
                 continous_vals = ','.join(continous_vals)
