@@ -145,9 +145,10 @@ class DeepFM(nn.Module):
         """
         model = self.train().to(device=self.device)
         criterion = F.binary_cross_entropy_with_logits
-        print("epoch,iteration,time")
+        print("epoch,iteration,time", flush=True)
+        print(f"0,0,{time()}", flush=True)
         for e in range(epochs):
-            time1=time()
+            # time1=time()
             for t, (xi, xv, y) in enumerate(loader_train):
                 xi = xi.to(device=self.device, dtype=self.dtype)
                 xv = xv.to(device=self.device, dtype=torch.float)
@@ -162,7 +163,7 @@ class DeepFM(nn.Module):
                 if verbose and (t+1) % print_every == 0:
                     # time2=time()
                     # print('Iteration %d, loss = %.4f, cost time = %.6f ' % (t+1, loss.item(), time2-time1))
-                    print(e, t+1, time())
+                    print(f"{e+1},{t+1},{time()}", flush=True)
                     # self.check_accuracy(loader_val, model)
                     # time1=time()
                     # print()
