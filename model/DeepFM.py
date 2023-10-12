@@ -145,8 +145,9 @@ class DeepFM(nn.Module):
         """
         model = self.train().to(device=self.device)
         criterion = F.binary_cross_entropy_with_logits
-
-        for _ in range(epochs):
+        print("epoch,iteration,time")
+        for e in range(epochs):
+            time1=time()
             for t, (xi, xv, y) in enumerate(loader_train):
                 xi = xi.to(device=self.device, dtype=self.dtype)
                 xv = xv.to(device=self.device, dtype=torch.float)
@@ -158,10 +159,13 @@ class DeepFM(nn.Module):
                 loss.backward()
                 optimizer.step()
 
-                if verbose and t % print_every == 0:
-                    print('Iteration %d, loss = %.4f' % (t, loss.item()))
-                    self.check_accuracy(loader_val, model)
-                    print()
+                if verbose and (t+1) % print_every == 0:
+                    # time2=time()
+                    # print('Iteration %d, loss = %.4f, cost time = %.6f ' % (t+1, loss.item(), time2-time1))
+                    print(e, t+1, time())
+                    # self.check_accuracy(loader_val, model)
+                    # time1=time()
+                    # print()
     
     def check_accuracy(self, loader, model):
         if loader.dataset.train:
